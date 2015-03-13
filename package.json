@@ -1,0 +1,34 @@
+{
+  "name": "vinyl-tapper",
+  "version": "0.1.0",
+  "description": "A vinyl-passthrough-stream for testing purposes",
+  "main": "./lib",
+  "scripts": {
+    "test": "mocha --compilers coffee:coffee-script/register",
+    "build": "coffee -c -b -o lib src/*.coffee",
+    "prepublish": "npm build"
+  },
+  "keywords": [
+    "vinyl",
+    "passthrough",
+    "testing"
+  ],
+  "author": {
+    "name": "Andreas Riedl",
+    "email": "office@tapirdata.com",
+    "url": "https://github.com/tapirdata"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bl": "^0.9.4",
+    "readable-stream": "^1.0.33"
+  },
+  "devDependencies": {
+    "chai": "^2.1.1",
+    "coffee-script": "^1.9.1",
+    "mocha": "^2.2.1",
+    "rimraf": "^2.3.2",
+    "vinyl-fs": "^1.0.0",
+    "walk": "^2.3.9"
+  }
+}

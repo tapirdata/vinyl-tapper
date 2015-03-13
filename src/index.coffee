@@ -20,6 +20,7 @@ class Collector extends stream.Transform
 
 class VinylTap extends stream.Transform
   constructor: (options) ->
+    options = options or {}
     super objectMode: true
     @provideBuffer = options.provideBuffer  
     @terminate = options.terminate

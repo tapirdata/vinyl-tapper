@@ -13,6 +13,10 @@
     "passthrough",
     "testing"
   ],
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/tapirdata/vinyl-tapper"
+  },
   "author": {
     "name": "Andreas Riedl",
     "email": "office@tapirdata.com",

@@ -10,6 +10,13 @@ fileCount = 2
 srcDir = path.join __dirname, 'fixtures'
 destDir = path.join __dirname, '.out'
 
+equalBuffers = (b1, b2) ->
+  if typeof b1.equals == 'function'
+    b1.equals b2
+  else # node 0.10
+    b1.toString('binary') == b2.toString('binary')
+
+
 compareTrees = (srcRoot, destRoot, destBuffers, done) ->
   walk = require 'walk' 
   walker = walk.walk srcDir
@@ -26,7 +33,7 @@ compareTrees = (srcRoot, destRoot, destBuffers, done) ->
       # console.log 'compareTrees srcBuffer=', srcBuffer
       if destBuffers
         destBuffer = destBuffers[destPath]
-        if not srcBuffer.equals destBuffer
+        if not equalBuffers srcBuffer, destBuffer
           done new Error "not equal: #{srcPath}"
           return
         next()
@@ -36,7 +43,7 @@ compareTrees = (srcRoot, destRoot, destBuffers, done) ->
           if err
             done err
             return
-          if not srcBuffer.equals destBuffer
+          if not equalBuffers srcBuffer, destBuffer
             done new Error "not equal: #{srcPath}"
             return
           next()

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register",
     "build": "coffee -c -b -o lib src/*.coffee",
-    "prepublish": "npm build"
+    "prepublish": "npm run build"
   },
   "keywords": [
     "vinyl",

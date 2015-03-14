@@ -91,7 +91,7 @@ makeTests = (title, options) ->
           done err
 
 
-describe 'stream-tapper', ->
+describe 'stream-tapper for vinyl-stream', ->
   makeTests 'with buffer-files',
     useBuffer: true
 

@@ -79,13 +79,14 @@ vinylFs.src(['**/*.gz'], {cwd: 'src', buffer: false})
 
 creates a new tapper-stream. Available options:
 
-- `options.provideBuffer`: If true, 'tap'-events will provide a buffer as a second argument.
-- `options.terminate`: If true, the incoming vinyl-stream will be consumed by the tapper.
+- `options.single`: If true, creates a tapper for a single data-stream. If false (default), create a tapper for a vinyl-file-stream.
+- `options.provideBuffer`: If true, 'tap'-events will provide a buffer.
+- `options.terminate`: If true, the incoming stream will be consumed by the tapper.
 
 ### Event 'tap'
 
-- `file`: the vinyl-file object
-- `buffer` (optional, if `provideBuffer`): the buffered contents of the vinyl-file.
+- `file` (only if not `single`): the vinyl-file object
+- `buffer` (only if `provideBuffer`): the buffered contents of the vinyl-file.
 
-This event will be emitted as soon as possible: With `provideBuffer: false` or if a file already holds a buffer, this will be when the file enters the tapper. For stream-files with `provideBuffer: true` the event will be emmitted when the file has passed completely.
+This event will be emitted as soon as possible: With not `provideBuffer` or if a file already holds a buffer, this will be when the file enters the tapper. For stream-files with `provideBuffer` the event will be emmitted when the file has passed completely.
 

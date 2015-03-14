@@ -3,22 +3,25 @@
 stream = require 'readable-stream'
 BufferList = require 'bl'
 
-class Collector extends stream.Transform
-  constructor: (@name) ->
-    super()
-    @bl = new BufferList()
+class SingleTapper extends stream.Transform
+  constructor: (options) ->
+    super options
+    options = options or {}
+    if options.provideBuffer
+      @bl = new BufferList()
     @on 'end', ->
-      # console.log 'Collector.end name=%s', @name
-      @emit 'complete', @bl.slice()
+      @emit 'tap', @bl and @bl.slice()
+    if options.terminate
+      @resume()
 
   _transform: (chunk, enc, next) ->
-    # console.log 'Collector._transform name=%s, chunk=', @name, chunk
-    @bl.append chunk
+    if @bl
+      @bl.append chunk
     next null, chunk
     return
 
 
-class VinylTap extends stream.Transform
+class VinylTapper extends stream.Transform
   constructor: (options) ->
     options = options or {}
     super objectMode: true
@@ -33,45 +36,46 @@ class VinylTap extends stream.Transform
         @checkFin()
 
   checkFin: ->
-    # console.log 'VinylTap checkFin', @waitCount, @isFin
     if @isFin and @waitCount == 0
       @resume()
 
+  tapFile: (file, done) ->
+    ++@waitCount
+    if file.isNull()
+      done null
+      return file
+    if file.isBuffer()
+      done file.contents
+      return file
+    singleTapper = new SingleTapper
+      provideBuffer: @provideBuffer
+      terminate: @terminate
+    singleTapper.on 'tap', (buffer) ->
+      done buffer
+    file.contents = file.contents.pipe singleTapper
+    return file
+
   _transform: (file, enc, next) ->
-    file = @doFile file, (buffer) =>
+    file = @tapFile file, (buffer) =>
       @emitTap file, buffer
       if @terminate
         --@waitCount
         @checkFin()
-    if @terminate and file.isStream()
-      file.contents.resume()
     next null, file
     return
 
-  doFile: (file, cb) ->
-    ++@waitCount
-    if not @provideBuffer
-      cb()
-      return file
-    if file.isNull()
-      cb null
-      return file
-    if file.isBuffer()
-      cb file.contents
-      return file
-    collector = new Collector file.relative
-    collector.on 'complete', (buffer) -> cb buffer
-    file.contents = file.contents.pipe collector
-    return file
-     
   emitTap: (file, buffer) ->
-    # console.log 'emitTap', file
     @emit 'tap', file, buffer
 
 
 factory = (options)->
-  new VinylTap options
-factory.VinylTap = VinylTap
+  if options and options.single
+    new SingleTapper options
+  else
+    new VinylTapper options
+
+factory.SingleTapper = SingleTapper
+factory.VinylTapper = VinylTapper
 
 module.exports = factory
 

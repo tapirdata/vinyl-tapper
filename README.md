@@ -7,7 +7,7 @@ Works with buffer- and file- vinyl-streams, optionally terminates the stream.
 
 ## Usage
 
-### Check metadata
+### Check meta data
 
 Check if `gulp-unzip` correctly strips the `.gz` - extension:
 
@@ -77,7 +77,7 @@ vinylFs.src(['**/*.gz'], {cwd: 'src', buffer: false})
 
 #### var tapper = tapper(options);
 
-creates a new tapper-stream. Available options:
+Creates a new tapper-stream. Available options:
 
 - `single`: If true, creates a tapper for a single data-stream. If false (default), create a tapper for a vinyl-file-stream.
 - `provideBuffer`: If true, 'tap'-events will provide a buffer.

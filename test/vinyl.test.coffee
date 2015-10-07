@@ -9,6 +9,7 @@ streamTapper = require '../src'
 fileCount = 2
 srcDir = path.join __dirname, 'fixtures'
 destDir = path.join __dirname, '.out'
+dumpDir = path.join __dirname, '.dump'
 
 equalBuffers = (b1, b2) ->
   if typeof b1.equals == 'function'
@@ -75,6 +76,8 @@ makeTests = (title, options) ->
         if not options.terminate 
           well = well.pipe vinylFs.dest destDir
         well.on 'end', done
+        if not options.terminate 
+          well = well.pipe vinylFs.dest dumpDir
 
     if not options.terminate   
       it 'should pass all files unmodified', (done) ->

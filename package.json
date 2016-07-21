@@ -24,15 +24,15 @@
   },
   "license": "MIT",
   "dependencies": {
-    "bl": "^1.0.0",
-    "readable-stream": "^2.0.5"
+    "bl": "^1.1.2",
+    "readable-stream": "^2.1.4"
   },
   "devDependencies": {
-    "chai": "^3.4.1",
+    "chai": "^3.5.0",
     "coffee-script": "^1.10.0",
-    "mocha": "^2.3.4",
-    "rimraf": "^2.5.0",
-    "vinyl-fs": "2.3.1",
+    "mocha": "^2.5.3",
+    "rimraf": "^2.5.3",
+    "vinyl-fs": "2.4.3",
     "walk": "^2.3.9"
   }
 }

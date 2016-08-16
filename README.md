@@ -1,4 +1,9 @@
-# vinyl-tapper [![Build Status](https://secure.travis-ci.org/tapirdata/vinyl-tapper.png?branch=master)](https://travis-ci.org/tapirdata/vinyl-tapper) [![Dependency Status](https://david-dm.org/tapirdata/vinyl-tapper.svg)](https://david-dm.org/tapirdata/vinyl-tapper) [![devDependency Status](https://david-dm.org/tapirdata/vinyl-tapper/dev-status.svg)](https://david-dm.org/tapirdata/vinyl-tapper#info=devDependencies)
+# vinyl-tapper
+
+[![npm version](https://img.shields.io/npm/v/vinyl-tapper.svg?style=flat-square)](https://www.npmjs.com/package/vinyl-tapper)
+[![Build Status](https://secure.travis-ci.org/tapirdata/vinyl-tapper.png?branch=master)](https://travis-ci.org/tapirdata/vinyl-tapper)
+[![Dependency Status](https://david-dm.org/tapirdata/vinyl-tapper.svg)](https://david-dm.org/tapirdata/vinyl-tapper)
+[![devDependency Status](https://david-dm.org/tapirdata/vinyl-tapper/dev-status.svg)](https://david-dm.org/tapirdata/vinyl-tapper#info=devDependencies)
 > A transform-stream for vinyl stream that emits a 'tap'-event for every file
 
 ## Features
@@ -12,13 +17,13 @@ Works with buffer- and file- vinyl-streams, optionally terminates the stream.
 Check if `gulp-unzip` correctly strips the `.gz` - extension:
 
 ``` js
-var assert = require('assert');
-var path = require('path');
-var gunzip = require('gulp-gunzip');
-var vinylFs = require('vinyl-fs');
-var vinylTapper = require('vinyl-tapper');
+import assert from 'assert';
+import path from 'path';
+import gunzip from 'gulp-gunzip';
+import vinylFs from 'vinyl-fs';
+import vinylTapper from 'vinyl-tapper';
 
-var tapper = vinylTapper();
+const tapper = vinylTapper();
 tapper.on('tap', function(file) {
   assert(!file.path.match(/\.gz$/));
 });
@@ -28,20 +33,19 @@ vinylFs.src(['**/*.gz'], {cwd: 'src', buffer: false})
   .pipe(gunzip())
   .pipe(tapper)
   .pipe(vinylFs.dest('dist'));
-
 ```
 ### Check contents
 
 Check if `gulp-unzip` does some expansion
 
 ``` js
-var assert = require('assert');
-var path = require('path');
-var gunzip = require('gulp-gunzip');
-var vinylFs = require('vinyl-fs');
-var vinylTapper = require('vinyl-tapper');
+import assert from 'assert';
+import path from 'path';
+import gunzip from 'gulp-gunzip';
+import vinylFs from 'vinyl-fs';
+import vinylTapper from 'vinyl-tapper';
 
-var tapper = vinylTapper({provideBuffer: true});
+const tapper = vinylTapper({provideBuffer: true});
 tapper.on('tap', function(file, buffer) {
   var contents = buffer.toString('utf8');
   assert(contents.match(/exports/)) // all our modules do export something
@@ -52,6 +56,7 @@ vinylFs.src(['**/*.gz'], {cwd: 'src', buffer: false})
   .pipe(gunzip())
   .pipe(tapper)
   .pipe(vinylFs.dest('dist'));
+
 ```
 The passed file-object are not modified in any manner.
 
@@ -60,7 +65,7 @@ The passed file-object are not modified in any manner.
 If there is no need to pipe along the resulting stream, you can specify `terminate: true` to get it eaten up right here:
 
 ``` js
-var tapper = vinylTapper({provideBuffer: true, terminate: true});
+const tapper = vinylTapper({provideBuffer: true, terminate: true});
 tapper.on('tap', function(file, buffer) {
   // do some checks
 });
@@ -75,7 +80,7 @@ vinylFs.src(['**/*.gz'], {cwd: 'src', buffer: false})
 
 ## API
 
-#### var tapper = tapper(options);
+#### const tapper = tapper(options);
 
 Creates a new tapper-stream. Available options:
 

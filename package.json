@@ -1,6 +1,6 @@
 {
   "name": "vinyl-tapper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A vinyl-passthrough-stream for testing purposes",
   "main": "./lib",
   "scripts": {

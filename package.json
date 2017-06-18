@@ -28,7 +28,9 @@
   "dependencies": {
     "@types/bl": "^0.8.30",
     "@types/node": "^7.0.31",
-    "bl": "^1.2.0"
+    "@types/vinyl": "^2.0.0",
+    "bl": "^1.2.0",
+    "vinyl": "^2.0.2"
   },
   "devDependencies": {
     "@types/chai": "^4.0.0",

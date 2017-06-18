@@ -1,6 +1,7 @@
 import fs = require("fs")
 import path = require("path")
 import rimraf = require("rimraf")
+import File = require("vinyl")
 import vinylFs = require("vinyl-fs")
 import { expect } from "chai"
 import streamTapper from "../src"
@@ -72,7 +73,7 @@ function makeTests(title: string, options: any) {
       provideBuffer: options.provideBuffer,
       terminate: options.terminate,
     })
-    tapper.on("tap", (file: any, buffer: Buffer) => {
+    tapper.on("tap", (file: File, buffer: Buffer) => {
       const destPath = path.join(destDir, path.relative(srcDir, file.path))
       tapResults[destPath] = buffer || "nothing"
     })

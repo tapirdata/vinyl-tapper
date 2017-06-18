@@ -1,4 +1,5 @@
 import stream = require("stream")
+import File = require("vinyl")
 import { Cb, TapperOptions } from "./options"
 import { SingleTapper } from "./singleTapper"
 
@@ -24,7 +25,7 @@ export class VinylTapper extends stream.Transform {
     }
   }
 
-  public _transform(file: any, enc: string, next: Cb) {
+  public _transform(file: File, enc: string, next: Cb) {
     file = this.tapFile(file, (buffer: Buffer) => {
       this.emitTap(file, buffer)
       if (this.terminate) {
@@ -41,7 +42,7 @@ export class VinylTapper extends stream.Transform {
     }
   }
 
-  protected tapFile(file: any, done: Cb) {
+  protected tapFile(file: File, done: Cb) {
     ++this.waitCount
     if (file.isNull()) {
       done(null)
@@ -56,11 +57,11 @@ export class VinylTapper extends stream.Transform {
       terminate: this.terminate,
     })
     singleTapper.on("tap", (buffer: Buffer) => done(buffer))
-    file.contents = file.contents.pipe(singleTapper)
+    file.contents = (file.contents as stream.Readable).pipe(singleTapper)
     return file
   }
 
-  protected emitTap(file: any, buffer: Buffer) {
+  protected emitTap(file: File, buffer: Buffer) {
     this.emit("tap", file, buffer)
   }
 }

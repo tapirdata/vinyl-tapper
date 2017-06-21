@@ -3,9 +3,9 @@
   "version": "1.1.1",
   "description": "A vinyl-passthrough-stream for testing purposes",
   "main": "./lib",
-  "types": "lib/index.d.ts",
+  "types": "./lib/index.d.ts",
   "scripts": {
-    "lint": "tslint src/**/*.ts test/**/*.ts",
+    "lint": "tslint \"src/**/*.ts\" \"test/**/*.ts\"",
     "build": "tsc",
     "prepare": "npm run build",
     "test": "mocha --compilers ts:ts-node/register ./test"

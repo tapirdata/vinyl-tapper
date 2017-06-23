@@ -4,8 +4,8 @@ import { VinylTapper } from "./vinylTapper"
 
 export interface Factory {
   (options: TapperOptions): SingleTapper | VinylTapper,
-  SingleTapper: any
-  VinylTapper: any
+  SingleTapper: typeof SingleTapper
+  VinylTapper: typeof VinylTapper
 }
 
 const factory = ((options: TapperOptions) => {
@@ -16,7 +16,8 @@ const factory = ((options: TapperOptions) => {
   }
 }) as Factory
 
-factory.SingleTapper = SingleTapper
-factory.VinylTapper = VinylTapper
+factory.SingleTapper = SingleTapper // legacy
+factory.VinylTapper = VinylTapper // legacy
 
 export default factory
+export { TapperOptions, SingleTapper, VinylTapper }

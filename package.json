@@ -27,20 +27,20 @@
   "license": "MIT",
   "dependencies": {
     "@types/bl": "^0.8.30",
-    "@types/node": "^7.0.31",
+    "@types/node": "^8.0.0",
     "@types/vinyl": "^2.0.0",
     "bl": "^1.2.0",
     "vinyl": "^2.0.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.0",
+    "@types/chai": "^4.0.1",
     "@types/mocha": "^2.2.41",
     "@types/rimraf": "0.0.28",
     "@types/vinyl-fs": "^2.4.5",
     "chai": "^4.0.2",
     "mocha": "^3.4.2",
     "rimraf": "^2.5.4",
-    "ts-node": "^3.0.6",
+    "ts-node": "^3.1.0",
     "tslint": "^5.4.3",
     "typescript": "^2.4.0",
     "vinyl-fs": "2.4.4",

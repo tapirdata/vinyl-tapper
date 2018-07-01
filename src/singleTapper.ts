@@ -1,10 +1,11 @@
-import stream = require("stream")
 import BufferList = require("bl")
+import stream = require("stream")
+
 import { Cb, TapperOptions } from "./options"
 
 export class SingleTapper extends stream.Transform {
 
-  protected bl: BufferList
+  protected bl?: BufferList
 
   constructor(options: TapperOptions = {}) {
     super(options)

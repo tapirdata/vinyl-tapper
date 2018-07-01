@@ -26,24 +26,24 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@types/bl": "^0.8.30",
-    "@types/node": "^8.0.17",
-    "@types/vinyl": "^2.0.0",
-    "bl": "^1.2.0",
-    "vinyl": "^2.1.0"
+    "@types/bl": "^0.8.32",
+    "@types/node": "^10.5.1",
+    "@types/vinyl": "^2.0.2",
+    "bl": "^2.0.1",
+    "vinyl": "^2.2.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.1",
-    "@types/mocha": "^2.2.41",
-    "@types/rimraf": "0.0.28",
-    "@types/vinyl-fs": "^2.4.5",
-    "chai": "^4.1.0",
-    "mocha": "^3.4.2",
-    "rimraf": "^2.5.4",
-    "ts-node": "^3.3.0",
-    "tslint": "^5.5.0",
-    "typescript": "^2.4.2",
-    "vinyl-fs": "2.4.4",
-    "walk": "^2.3.9"
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.4",
+    "@types/rimraf": "2.0.2",
+    "@types/vinyl-fs": "^2.4.8",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "rimraf": "^2.6.2",
+    "ts-node": "^7.0.0",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2",
+    "vinyl-fs": "3.0.3",
+    "walk": "^2.3.13"
   }
 }

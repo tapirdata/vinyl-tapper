@@ -1,9 +1,10 @@
+import { expect } from "chai"
 import fs = require("fs")
 import path = require("path")
 import rimraf = require("rimraf")
 import File = require("vinyl")
 import vinylFs = require("vinyl-fs")
-import { expect } from "chai"
+
 import streamTapper from "../src"
 import { Cb } from "../src/options"
 

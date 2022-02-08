@@ -1,9 +1,6 @@
 # vinyl-tapper
 
 [![npm version](https://img.shields.io/npm/v/vinyl-tapper.svg?style=flat-square)](https://www.npmjs.com/package/vinyl-tapper)
-[![Build Status](https://secure.travis-ci.org/tapirdata/vinyl-tapper.png?branch=master)](https://travis-ci.org/tapirdata/vinyl-tapper)
-[![Dependency Status](https://david-dm.org/tapirdata/vinyl-tapper.svg)](https://david-dm.org/tapirdata/vinyl-tapper)
-[![devDependency Status](https://david-dm.org/tapirdata/vinyl-tapper/dev-status.svg)](https://david-dm.org/tapirdata/vinyl-tapper#info=devDependencies)
 > A transform-stream for vinyl stream that emits a 'tap'-event for every file
 
 ## Features

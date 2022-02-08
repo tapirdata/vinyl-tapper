@@ -2,9 +2,10 @@ import { expect } from "chai";
 import fs = require("fs");
 import path = require("path");
 import rimraf = require("rimraf");
+import { Transform } from "stream";
 import File = require("vinyl");
 import vinylFs = require("vinyl-fs");
-import { walk, WalkStats } from "walk";
+import { walk, WalkStatEventCallback, WalkStats } from "walk";
 
 import streamTapper from "../src";
 
@@ -14,12 +15,21 @@ const destDir = path.join(__dirname, ".out");
 const dumpDir = path.join(__dirname, ".dump");
 
 interface TapResults {
-  [key: string]: Buffer;
+  [key: string]: Buffer | null;
 }
 
-type Cb = (error?: Error) => void;
+type Done = (error?: Error) => void;
 
-function equalBuffers(b1: Buffer, b2: Buffer) {
+interface TestOptions {
+  useBuffer?: boolean;
+  provideBuffer?: boolean;
+  terminate?: boolean;
+}
+
+function equalBuffers(b1: Buffer, b2: Buffer | null) {
+  if (b2 == null) {
+    return false;
+  }
   if (typeof b1.equals === "function") {
     return b1.equals(b2);
   } else {
@@ -31,48 +41,57 @@ function equalBuffers(b1: Buffer, b2: Buffer) {
 function compareTrees(
   srcRoot: string,
   destRoot: string,
-  destBuffers: null | Record<string, Buffer>,
-  done: Cb
+  destBuffers: null | Record<string, Buffer | null>,
+  done: Done
 ) {
   const walker = walk(srcDir);
 
-  walker.on("file", (src: string, stat: WalkStats, next: Cb) => {
-    const srcPath = path.join(src, stat.name);
-    const destPath = path.join(destRoot, path.relative(src, srcDir), stat.name);
-    return fs.readFile(srcPath, (err, srcBuffer) => {
-      if (err) {
-        done(err);
-        return;
-      }
-      if (destBuffers) {
-        const destBuffer = destBuffers[destPath];
-        if (!equalBuffers(srcBuffer, destBuffer)) {
-          done(new Error(`not equal: ${srcPath}`));
+  walker.on(
+    "file",
+    (src: string, stat: WalkStats, next: WalkStatEventCallback) => {
+      const srcPath = path.join(src, stat.name);
+      const destPath = path.join(
+        destRoot,
+        path.relative(src, srcDir),
+        stat.name
+      );
+      return fs.readFile(srcPath, (err, srcBuffer) => {
+        if (err) {
+          done(err);
           return;
         }
-        next();
-        return;
-      } else {
-        fs.readFile(destPath, (destErr, destBuffer) => {
-          if (destErr) {
-            done(destErr);
-            return;
-          }
+        if (destBuffers) {
+          const destBuffer = destBuffers[destPath];
           if (!equalBuffers(srcBuffer, destBuffer)) {
             done(new Error(`not equal: ${srcPath}`));
             return;
           }
-          next();
-        });
-        return;
-      }
-    });
-  });
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          next(src, stat, () => {});
+          return;
+        } else {
+          fs.readFile(destPath, (destErr, destBuffer) => {
+            if (destErr) {
+              done(destErr);
+              return;
+            }
+            if (!equalBuffers(srcBuffer, destBuffer)) {
+              done(new Error(`not equal: ${srcPath}`));
+              return;
+            }
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            next(src, stat, () => {});
+          });
+          return;
+        }
+      });
+    }
+  );
 
   return walker.on("end", () => done());
 }
 
-function makeTests(title: string, options: any) {
+function makeTests(title: string, options: TestOptions) {
   describe(title, () => {
     const tapResults: TapResults = {};
     const tapper = streamTapper({
@@ -81,30 +100,30 @@ function makeTests(title: string, options: any) {
     });
     tapper.on("tap", (file: File, buffer: Buffer) => {
       const destPath = path.join(destDir, path.relative(srcDir, file.path));
-      tapResults[destPath] = buffer || "nothing";
+      tapResults[destPath] = buffer || Buffer.from("nothing");
     });
 
     before((done) => {
       rimraf(destDir, () => {
-        let well: any = vinylFs
+        let well: Transform = vinylFs
           .src("**/*.*", {
             cwd: srcDir,
             buffer: options.useBuffer,
           })
           .pipe(tapper);
         if (!options.terminate) {
-          well = well.pipe(vinylFs.dest(destDir));
+          well = well.pipe(vinylFs.dest(destDir)) as Transform;
         }
         well.on("end", done);
         if (!options.terminate) {
-          return (well = well.pipe(vinylFs.dest(dumpDir)));
+          return (well = well.pipe(vinylFs.dest(dumpDir)) as Transform);
         }
       });
     });
 
     if (!options.terminate) {
-      it("should pass all files unmodified", (done) => {
-        compareTrees(srcDir, destDir, null, (err: any) => done(err));
+      it("should pass all files unmodified", (done: Done) => {
+        compareTrees(srcDir, destDir, null, done);
       });
     }
 
@@ -113,8 +132,8 @@ function makeTests(title: string, options: any) {
       expect(Object.keys(tapResults)).to.have.length(fileCount));
 
     if (options.provideBuffer) {
-      return it("should provide the buffers correctly", (done) => {
-        compareTrees(srcDir, destDir, tapResults, (err: any) => done(err));
+      return it("should provide the buffers correctly", (done: Done) => {
+        compareTrees(srcDir, destDir, tapResults, done);
       });
     }
   });

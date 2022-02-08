@@ -1,12 +1,12 @@
-import { TransformCallback } from "stream";
-import stream = require("stream");
-import File = require("vinyl");
-import { TapperOptions } from "./options";
-import { SingleTapper } from "./singleTapper";
+import { Readable, Transform, TransformCallback } from 'stream';
+import File from 'vinyl';
+
+import { TapperOptions } from './options';
+import { SingleTapper } from './singleTapper';
 
 export type BufferCb = (buffer: Buffer | null) => void;
 
-export class VinylTapper extends stream.Transform {
+export class VinylTapper extends Transform {
   protected provideBuffer?: boolean;
   protected terminate?: boolean;
   protected isFin?: boolean;
@@ -20,7 +20,7 @@ export class VinylTapper extends stream.Transform {
 
     if (this.terminate) {
       this.isFin = false;
-      this.on("finish", () => {
+      this.on('finish', () => {
         this.isFin = true;
         this.checkFin();
       });
@@ -58,12 +58,12 @@ export class VinylTapper extends stream.Transform {
       provideBuffer: this.provideBuffer,
       terminate: this.terminate,
     });
-    singleTapper.on("tap", (buffer: Buffer) => done(buffer));
-    file.contents = (file.contents as stream.Readable).pipe(singleTapper);
+    singleTapper.on('tap', (buffer: Buffer) => done(buffer));
+    file.contents = (file.contents as Readable).pipe(singleTapper);
     return file;
   }
 
   protected emitTap(file: File, buffer: Buffer | null): void {
-    this.emit("tap", file, buffer);
+    this.emit('tap', file, buffer);
   }
 }

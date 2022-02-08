@@ -1,6 +1,6 @@
-import { TapperOptions } from "./options";
-import { SingleTapper } from "./singleTapper";
-import { VinylTapper } from "./vinylTapper";
+import { TapperOptions } from './options';
+import { SingleTapper } from './singleTapper';
+import { VinylTapper } from './vinylTapper';
 
 export interface Factory {
   (options: TapperOptions): SingleTapper | VinylTapper;

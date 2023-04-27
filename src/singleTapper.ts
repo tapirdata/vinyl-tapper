@@ -1,4 +1,4 @@
-import BufferList from 'bl/BufferList';
+import BufferList from 'bl';
 import { Transform, TransformCallback } from 'stream';
 
 import { TapperOptions } from './options';

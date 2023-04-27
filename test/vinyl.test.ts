@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import fs from 'fs';
 import path from 'path';
-import rimraf from 'rimraf';
+import { rimraf } from 'rimraf';
 import { Transform } from 'stream';
 import File from 'vinyl';
 import vinylFs from 'vinyl-fs';
@@ -97,22 +97,26 @@ function makeTests(title: string, options: TestOptions) {
     });
 
     before((done) => {
-      rimraf(destDir, () => {
-        let well: Transform = vinylFs
-          .src('**/*.*', {
-            cwd: srcDir,
-            buffer: options.useBuffer,
-          })
-          .pipe(tapper);
-        if (!options.terminate) {
-          well = well.pipe(vinylFs.dest(destDir)) as Transform;
-        }
-        well.on('end', done);
-        if (!options.terminate) {
-          well = well.pipe(vinylFs.dest(dumpDir)) as Transform;
-        }
-        return well;
-      });
+      rimraf(destDir)
+        .then(() => {
+          let well: Transform = vinylFs
+            .src('**/*.*', {
+              cwd: srcDir,
+              buffer: options.useBuffer,
+            })
+            .pipe(tapper);
+          if (!options.terminate) {
+            well = well.pipe(vinylFs.dest(destDir)) as Transform;
+          }
+          well.on('end', done);
+          if (!options.terminate) {
+            well = well.pipe(vinylFs.dest(dumpDir)) as Transform;
+          }
+          return well;
+        })
+        .catch(() => {
+          console.error(`cannot delete "{destdir}"`);
+        });
     });
 
     if (!options.terminate) {
